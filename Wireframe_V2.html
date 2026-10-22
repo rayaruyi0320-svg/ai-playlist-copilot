@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playlist Copilot — Lo-Fi Wireframes V2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Courier New', monospace; background: #f0f0f0; display: flex; justify-content: center; padding: 20px; }
+  
+  .phone { width: 390px; min-height: 844px; background: #fff; border: 2px solid #333; border-radius: 24px; overflow: hidden; position: relative; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  .status-bar { height: 44px; background: #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #999; border-bottom: 1px solid #ddd; }
+  .page { display: none; padding: 20px; min-height: 800px; }
+  .page.active { display: block; }
+
+  .wf-box { border: 1.5px dashed #999; padding: 16px; margin-bottom: 12px; border-radius: 8px; background: #fafafa; }
+  .wf-box.solid { border-style: solid; }
+  .wf-box.accent { border-color: #333; border-style: solid; border-width: 2px; background: #f8f8f8; }
+  .wf-box.highlight { border-color: #EB008C; border-style: solid; border-width: 2.5px; background: #fef5f9; }
+  .wf-line { height: 10px; background: #ddd; border-radius: 4px; margin-bottom: 8px; }
+  .wf-line.short { width: 60%; }
+  .wf-line.medium { width: 80%; }
+  .wf-line.tiny { width: 40%; height: 8px; }
+  .wf-line.dark { background: #333; }
+  .wf-btn { display: block; text-align: center; padding: 14px; border: 2px solid #333; border-radius: 12px; font-weight: bold; margin: 8px 0; cursor: pointer; font-size: 13px; letter-spacing: 0.5px; background: #fff; transition: all 0.1s; }
+  .wf-btn.primary { background: #EB008C; color: #fff; border-color: #EB008C; padding: 16px; font-size: 14px; }
+  .wf-btn.secondary { background: #fff; color: #333; border-color: #ddd; font-size: 12px; padding: 12px; }
+  .wf-btn.spotify { background: #1DB954; color: #fff; border-color: #1DB954; padding: 16px; font-size: 14px; }
+  .wf-btn:hover { opacity: 0.85; }
+  .wf-chip { display: inline-block; padding: 10px 16px; border: 1.5px solid #bbb; border-radius: 20px; font-size: 11px; margin: 4px; cursor: pointer; background: #fff; }
+  .wf-chip:hover { background: #eee; }
+  .wf-chip.active { border-color: #EB008C; background: #fef5f9; }
+  .wf-chip-row { margin: 8px 0; }
+  .wf-card { border: 1.5px solid #ddd; border-radius: 10px; padding: 14px; margin-bottom: 10px; background: #fff; }
+  .wf-circle { width: 48px; height: 48px; border-radius: 8px; background: #ddd; border: 1px solid #ccc; display: inline-block; vertical-align: middle; margin-right: 12px; flex-shrink: 0; }
+  .wf-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .wf-nav { display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ddd; font-size: 10px; color: #666; }
+  .wf-nav-item { text-align: center; cursor: pointer; padding: 4px 12px; }
+  .wf-nav-item:hover { color: #333; font-weight: bold; }
+  .wf-nav-item.active { color: #EB008C; font-weight: bold; }
+  .wf-step { padding: 12px 16px; margin-bottom: 8px; border-radius: 10px; }
+  .wf-step.active-step { background: #f8f8f8; border: 1.5px solid #333; }
+  .wf-step.pending-step { opacity: 0.4; }
+  .wf-step .step-num { font-size: 20px; margin-bottom: 4px; display: inline-block; margin-right: 10px; }
+  .wf-step .step-text { font-size: 12px; display: inline-block; }
+  .wf-badge { display: inline-block; padding: 4px 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 10px; cursor: pointer; }
+  .wf-badge:hover { background: #f0f0f0; }
+  .wf-icon { width: 20px; height: 20px; border: 1.5px solid #999; border-radius: 4px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  .wf-text-sm { font-size: 11px; color: #888; }
+  .wf-text-xs { font-size: 10px; color: #aaa; }
+  .wf-text-dark { font-size: 11px; color: #333; }
+  .wf-mb { margin-bottom: 16px; }
+  .wf-mt { margin-top: 16px; }
+  .wf-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 9px; margin-right: 4px; }
+  .wf-tag.match { background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; }
+
+  label { display: block; font-size: 10px; color: #666; margin-bottom: 4px; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .ai-feedback { background: #fafafa; border-left: 3px solid #EB008C; padding: 10px 14px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+  .ai-feedback .ai-label { font-size: 9px; color: #EB008C; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+  .page-selector {
+    position: fixed; bottom: 20px; right: 20px; background: #fff;
+    border: 2px solid #333; border-radius: 12px; padding: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 1000;
+    max-width: 200px;
+  }
+  .page-selector select { width: 100%; padding: 6px; font-family: 'Courier New', monospace; font-size: 12px; border: 1px solid #ddd; }
+
+  .sticky-bottom { position: absolute; bottom: 80px; left: 20px; right: 20px; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .explain-box { border: 1.5px dashed #4caf50; background: #f1f8e9; padding: 12px; border-radius: 10px; margin: 16px 0; }
+
+  @media (max-width: 440px) {
+    .phone { width: 100%; border-radius: 0; border: none; box-shadow: none; }
+    .page-selector { bottom: 10px; right: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">Playlist Copilot · Wireframe V2</div>
+
+  <!-- ═══════════ PAGE 0: LANDING (P0 Rewrite) ═══════════ -->
+  <div class="page active" id="p0">
+    <div style="text-align:center; padding-top: 40px;">
+      <div class="wf-circle" style="width:56px;height:56px;border-radius:14px;margin:0 auto 16px;"></div>
+      <div class="wf-line dark" style="width:85%;height:18px;margin:0 auto 8px;background:#333;"></div>
+      <div class="wf-line" style="width:70%;height:12px;margin:0 auto 16px;"></div>
+    </div>
+
+    <!-- NEW: Example Prompt Visualization -->
+    <div class="wf-box highlight" style="text-align:center; padding:20px;">
+      <div style="font-size:11px;color:#EB008C;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Try it</div>
+      <div style="font-size:14px;color:#333;margin-bottom:6px;font-weight:bold;">"15-min shower, upbeat R&B"</div>
+      <div style="font-size:24px;margin:8px 0;">↓</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <div class="wf-circle" style="width:24px;height:24px;"></div>
+        <div class="wf-circle" style="width:24px;height:24px;"></div>
+        <div class="wf-circle" style="width:24px;height:24px;"></div>
+        <span style="font-size:11px;color:#888;">Playlist appears instantly</span>
+      </div>
+    </div>
+
+    <div class="wf-btn primary" onclick="go('p1')" style="margin-top:16px;">Login with Spotify</div>
+
+    <!-- Value prop: 3 steps with visual hierarchy - Step 2 highlighted -->
+    <div style="margin-top:20px;">
+      <div class="wf-line dark" style="width:120px;height:12px;margin-bottom:12px;background:#333;"></div>
+      <div class="wf-box"><div class="wf-row"><div class="wf-circle" style="width:28px;height:28px;"></div><div><div class="wf-line short"></div><div class="wf-line tiny"></div></div></div></div>
+      <div class="wf-box highlight"><div class="wf-row"><div class="wf-circle" style="width:28px;height:28px;border-color:#EB008C;"></div><div><div class="wf-line dark short" style="background:#333;"></div><div class="wf-line tiny"></div></div><span class="wf-badge" style="border-color:#EB008C;color:#EB008C;">★ Key</span></div></div>
+      <div class="wf-box"><div class="wf-row"><div class="wf-circle" style="width:28px;height:28px;"></div><div><div class="wf-line short"></div><div class="wf-line tiny"></div></div></div></div>
+    </div>
+    <div style="text-align:center; margin-top: 20px;"><span class="wf-text-xs">Built with ❤️ + AI · Not affiliated with Spotify</span></div>
+  </div>
+
+  <!-- ═══════════ PAGE 1: LOGIN (unchanged, already ⭐⭐⭐⭐⭐) ═══════════ -->
+  <div class="page" id="p1">
+    <div style="font-size:11px;color:#888;cursor:pointer;" onclick="go('p0')">← Back</div>
+    <div style="text-align:center;padding-top:60px;">
+      <div class="wf-circle" style="width:48px;height:48px;margin:0 auto 16px;"></div>
+      <div class="wf-line dark" style="width:60%;height:14px;margin:0 auto 12px;background:#333;"></div>
+      <div class="wf-line short" style="margin:0 auto 20px;"></div>
+    </div>
+    <div class="wf-btn spotify" onclick="go('p2')">Login with Spotify</div>
+    <div class="wf-box" style="margin-top:16px;">
+      <label style="margin-top:0;">We only need permission to:</label>
+      <div class="wf-row"><span class="wf-text-dark">✓ Read your library</span></div>
+      <div class="wf-row"><span class="wf-text-dark">✓ Create playlists</span></div>
+    </div>
+    <div class="wf-text-xs" style="text-align:center;margin-top:16px;">We never see your password, email, or private data.</div>
+  </div>
+
+  <!-- ═══════════ PAGE 2: SYNC (P1: first-time note) ═══════════ -->
+  <div class="page" id="p2">
+    <div style="text-align:center;padding-top:100px;">
+      <div class="wf-circle" style="width:56px;height:56px;border-radius:50%;margin:0 auto 20px;border-style:dashed;"></div>
+      <div class="wf-line dark" style="width:70%;margin:0 auto 12px;background:#333;"></div>
+      <div class="wf-line short" style="margin:0 auto 6px;"></div>
+      <div class="wf-text-xs" style="margin-top:4px;background:#f0f0f0;display:inline-block;padding:4px 12px;border-radius:8px;">⚡ This only happens once</div>
+      <div style="margin-top:24px;">
+        <div style="width:80%;height:6px;background:#eee;border-radius:3px;margin:0 auto;overflow:hidden;">
+          <div style="width:55%;height:100%;background:#333;border-radius:3px;"></div>
+        </div>
+        <div class="wf-text-sm" style="margin-top:8px;">Synced 110 of 200 recent tracks</div>
+      </div>
+      <div class="wf-text-sm" style="margin-top:24px;text-decoration:underline;cursor:pointer;" onclick="go('p3')">Skip for now →</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 3: HOME (P0 Major Rewrite) ═══════════ -->
+  <div class="page" id="p3" style="padding-bottom:100px;">
+    <!-- Compact header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="wf-line dark" style="width:80px;height:14px;background:#333;"></div>
+      <span class="wf-text-xs" style="background:#f0f0f0;padding:4px 10px;border-radius:8px;">2,347 tracks</span>
+    </div>
+
+    <!-- ★ PROMPT AS VISUAL CENTER — expanded, dominant -->
+    <div class="wf-box highlight" style="min-height:200px;padding:24px;">
+      <div style="font-size:18px;color:#999;margin-bottom:16px;min-height:60px;" contenteditable="true" id="promptInput">Describe what you want to hear...</div>
+
+      <!-- NEW: Categorized example chips -->
+      <div style="margin-top:12px;">
+        <div style="font-size:9px;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Scene</div>
+        <div class="wf-chip-row">
+          <span class="wf-chip" onclick="setPrompt('15-min shower, R&B, upbeat')">🚿 Shower</span>
+          <span class="wf-chip" onclick="setPrompt('Coffee shop study, instrumental jazz')">☕ Study</span>
+          <span class="wf-chip" onclick="setPrompt('Commute, high energy, strong beat')">🚗 Commute</span>
+          <span class="wf-chip" onclick="setPrompt('Bedtime, calm acoustic, warm')">🌙 Sleep</span>
+        </div>
+        <div style="font-size:9px;color:#aaa;margin:8px 0 4px;text-transform:uppercase;letter-spacing:1px;">Vibe</div>
+        <div class="wf-chip-row">
+          <span class="wf-chip" onclick="setPrompt(document.getElementById('promptInput').textContent.replace('Describe what you want to hear...','') + ', upbeat, energetic')">⚡ Upbeat</span>
+          <span class="wf-chip" onclick="setPrompt(document.getElementById('promptInput').textContent.replace('Describe what you want to hear...','') + ', chill, relaxed')">🧘 Chill</span>
+          <span class="wf-chip" onclick="setPrompt(document.getElementById('promptInput').textContent.replace('Describe what you want to hear...','') + ', R&B, soulful')">🎵 R&B</span>
+          <span class="wf-chip" onclick="setPrompt(document.getElementById('promptInput').textContent.replace('Describe what you want to hear...','') + ', indie, guitar')">🎸 Indie</span>
+        </div>
+      </div>
+
+      <!-- Hint text -->
+      <div class="wf-text-xs" style="margin-top:12px;">Try describing a scene, mood, or activity — like talking to a music-loving friend.</div>
+    </div>
+
+    <!-- Generate button — fixed at bottom feel -->
+    <div class="wf-btn primary" onclick="go('p4')" style="font-size:15px;padding:16px;">🎵 Generate Playlist</div>
+
+    <!-- ★ Recent Playlists — minimized to 1 item only -->
+    <div style="margin-top:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="wf-line dark" style="width:100px;background:#333;margin-bottom:0;"></div>
+        <span class="wf-text-xs" style="text-decoration:underline;cursor:pointer;" onclick="go('p6')">View all →</span>
+      </div>
+      <div class="wf-card" onclick="go('p5')" style="cursor:pointer;">
+        <div class="wf-row">
+          <div class="wf-circle" style="width:40px;height:40px;"></div>
+          <div style="flex:1;">
+            <div class="wf-line dark short" style="background:#333;margin-bottom:4px;"></div>
+            <div class="wf-line tiny"></div>
+          </div>
+          <span class="wf-text-xs">Jul 2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wf-nav" style="position:absolute;bottom:0;left:0;right:0;background:#fff;">
+      <span class="wf-nav-item active">Home</span>
+      <span class="wf-nav-item" onclick="go('p6')">History</span>
+      <span class="wf-nav-item" onclick="go('p7')">Settings</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 4: GENERATING (P0: AI Feedback) ═══════════ -->
+  <div class="page" id="p4">
+    <div style="text-align:center;padding-top:50px;">
+      <!-- NEW: AI Understanding Feedback -->
+      <div class="ai-feedback" style="text-align:left;margin-bottom:24px;">
+        <div class="ai-label">AI detected ↓</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+          <span class="wf-tag match">✓ upbeat</span>
+          <span class="wf-tag match">✓ R&B</span>
+          <span class="wf-tag match">✓ 15 min</span>
+          <span class="wf-tag" style="background:#fff3e0;border:1px solid #ffe0b2;color:#e65100;">? vocals requested</span>
+          <span class="wf-tag" style="background:#fff3e0;border:1px solid #ffe0b2;color:#e65100;">? pop</span>
+        </div>
+      </div>
+
+      <div class="wf-step active-step">
+        <span class="step-num" style="color:#EB008C;">●</span>
+        <span class="step-text" style="font-weight:bold;">Understanding your request...</span>
+      </div>
+      <div class="wf-step pending-step">
+        <span class="step-num">○</span>
+        <span class="step-text">Searching your library...</span>
+      </div>
+      <div class="wf-step pending-step">
+        <span class="step-num">○</span>
+        <span class="step-text">Creating your playlist...</span>
+      </div>
+
+      <!-- NEW: Clarification state for medium confidence -->
+      <div class="wf-box" style="margin-top:18px;text-align:left;border-style:solid;border-color:#f5b041;background:#fffaf0;">
+        <div style="font-size:10px;color:#d17a00;font-weight:bold;margin-bottom:6px;">Low confidence state</div>
+        <div style="font-size:13px;color:#333;font-weight:bold;margin-bottom:8px;">Just to make sure — did you mean more R&B or more Pop?</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="wf-badge" onclick="go('p5')">R&B</span>
+          <span class="wf-badge" onclick="go('p5')">Pop</span>
+          <span class="wf-badge" onclick="go('p5')">Both</span>
+          <span class="wf-badge" onclick="go('p3')" style="color:#888;">I'll rephrase</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;">
+      <div class="wf-text-xs">🎵 🎶 ✨</div>
+      <div class="wf-text-sm" style="margin-top:12px;text-decoration:underline;cursor:pointer;" onclick="go('p5')">[Skip to Result →]</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 5: PLAYLIST RESULT (P0 Major Rewrite) ═══════════ -->
+  <div class="page" id="p5">
+    <div class="wf-text-sm" style="cursor:pointer;margin-bottom:8px;" onclick="go('p3')">← Back to Home</div>
+
+    <!-- ★ Enhanced Header -->
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,#ddd,#bbb);border-radius:12px;margin:0 auto 12px;border:2px solid #333;"></div>
+      <div class="wf-line dark" style="width:70%;height:16px;margin:0 auto 6px;background:#333;"></div>
+      <div class="wf-line" style="width:50%;height:10px;margin:0 auto 4px;"></div>
+      <div class="wf-text-sm">15 tracks · 52 min</div>
+    </div>
+
+    <!-- ★ AI Explainability — "Why these songs?" -->
+    <div class="explain-box">
+      <div style="font-size:10px;color:#2e7d32;font-weight:bold;margin-bottom:6px;">💡 Matched because:</div>
+      <div style="font-size:11px;color:#333;line-height:1.4;margin-bottom:8px;">Matched your upbeat R&B shower vibe using songs from your library for a short session.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span class="wf-tag match">✓ upbeat</span>
+        <span class="wf-tag match">✓ R&B</span>
+        <span class="wf-tag match">✓ short session</span>
+      </div>
+    </div>
+
+    <!-- ★ CTA Hierarchy: Primary → Spotify, Secondary → New Prompt -->
+    <div class="wf-btn spotify" style="font-size:15px;">🎧 Open in Spotify</div>
+    <div class="wf-text-xs" style="text-align:center;margin-bottom:12px;">Playlist saved to your Spotify</div>
+
+    <!-- Track List -->
+    <div style="margin:8px 0;">
+      <div class="wf-card"><div class="wf-row"><span class="wf-text-xs" style="width:20px;">1</span><div class="wf-circle" style="width:40px;height:40px;"></div><div style="flex:1;"><div class="wf-line dark short" style="background:#333;margin-bottom:3px;"></div><div class="wf-line tiny"></div></div><span class="wf-text-xs">3:42</span></div></div>
+      <div class="wf-card"><div class="wf-row"><span class="wf-text-xs" style="width:20px;">2</span><div class="wf-circle" style="width:40px;height:40px;"></div><div style="flex:1;"><div class="wf-line dark short" style="background:#333;margin-bottom:3px;"></div><div class="wf-line tiny"></div></div><span class="wf-text-xs">4:05</span></div></div>
+      <div class="wf-card"><div class="wf-row"><span class="wf-text-xs" style="width:20px;">3</span><div class="wf-circle" style="width:40px;height:40px;"></div><div style="flex:1;"><div class="wf-line dark short" style="background:#333;margin-bottom:3px;"></div><div class="wf-line tiny"></div></div><span class="wf-text-xs">3:18</span></div></div>
+      <div class="wf-card"><div class="wf-row"><span class="wf-text-xs" style="width:20px;">4</span><div class="wf-circle" style="width:40px;height:40px;"></div><div style="flex:1;"><div class="wf-line dark short" style="background:#333;margin-bottom:3px;"></div><div class="wf-line tiny"></div></div><span class="wf-text-xs">3:55</span></div></div>
+      <div class="wf-card"><div class="wf-row"><span class="wf-text-xs" style="width:20px;">5</span><div class="wf-circle" style="width:40px;height:40px;"></div><div style="flex:1;"><div class="wf-line dark short" style="background:#333;margin-bottom:3px;"></div><div class="wf-line tiny"></div></div><span class="wf-text-xs">4:22</span></div></div>
+    </div>
+    <div style="text-align:center;color:#888;font-size:10px;margin:8px 0;">+ 10 more tracks</div>
+
+    <!-- ★ Quick Refine entry (wireframe placeholder for V1.1) -->
+    <div class="wf-box" style="border-style:dotted;border-color:#ccc;text-align:center;padding:10px;">
+      <span class="wf-text-xs" style="color:#bbb;">Quick Refine is coming in V1.1:</span>
+      <div style="margin-top:6px;">
+        <span class="wf-badge">More R&B</span>
+        <span class="wf-badge">Less pop</span>
+        <span class="wf-badge">Shorter</span>
+        <span class="wf-badge" style="color:#aaa;">⏳ V1.1</span>
+      </div>
+    </div>
+
+    <div class="wf-btn secondary" onclick="go('p3')" style="margin-top:8px;">New Prompt</div>
+  </div>
+
+  <!-- ═══════════ PAGE 6: HISTORY (P1: Emphasize Prompt) ═══════════ -->
+  <div class="page" id="p6">
+    <div style="font-size:11px;color:#888;cursor:pointer;margin-bottom:16px;" onclick="go('p3')">← Back</div>
+    <div class="wf-line dark" style="width:80px;height:14px;margin-bottom:16px;background:#333;"></div>
+    <div style="margin:8px 0;">
+      <!-- ★ Cards now emphasize prompt text -->
+      <div class="wf-card">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🚿</span>
+          <div style="flex:1;">
+            <div class="wf-line dark" style="width:85%;background:#333;margin-bottom:4px;"></div>
+            <div style="display:flex;justify-content:space-between;">
+              <span class="wf-text-xs">15 tracks</span>
+              <span class="wf-text-xs">Jul 2</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;">
+          <span class="wf-badge" onclick="go('p5')">Open</span>
+          <span class="wf-badge" onclick="setPrompt('15-min shower, R&B, upbeat');go('p3')">Reuse</span>
+        </div>
+      </div>
+      <div class="wf-card">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">☕</span>
+          <div style="flex:1;">
+            <div class="wf-line dark" style="width:80%;background:#333;margin-bottom:4px;"></div>
+            <div style="display:flex;justify-content:space-between;">
+              <span class="wf-text-xs">22 tracks</span>
+              <span class="wf-text-xs">Jul 1</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;">
+          <span class="wf-badge">Open</span>
+          <span class="wf-badge" onclick="setPrompt('Coffee shop study, instrumental jazz');go('p3')">Reuse</span>
+        </div>
+      </div>
+      <div class="wf-card">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🚗</span>
+          <div style="flex:1;">
+            <div class="wf-line dark" style="width:70%;background:#333;margin-bottom:4px;"></div>
+            <div style="display:flex;justify-content:space-between;">
+              <span class="wf-text-xs">18 tracks</span>
+              <span class="wf-text-xs">Jun 30</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;">
+          <span class="wf-badge">Open</span>
+          <span class="wf-badge" onclick="setPrompt('Commute, high energy');go('p3')">Reuse</span>
+        </div>
+      </div>
+    </div>
+    <div class="wf-nav" style="position:absolute;bottom:0;left:0;right:0;background:#fff;">
+      <span class="wf-nav-item" onclick="go('p3')">Home</span>
+      <span class="wf-nav-item active">History</span>
+      <span class="wf-nav-item" onclick="go('p7')">Settings</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 7: SETTINGS (unchanged, ⭐⭐⭐⭐⭐) ═══════════ -->
+  <div class="page" id="p7">
+    <div style="font-size:11px;color:#888;cursor:pointer;margin-bottom:16px;" onclick="go('p3')">← Back</div>
+    <div class="wf-line dark" style="width:80px;height:14px;margin-bottom:16px;background:#333;"></div>
+    <label>Account</label>
+    <div class="wf-box"><div class="wf-row"><div class="wf-circle" style="width:32px;height:32px;border-radius:50%;"></div><div><div class="wf-line short"></div><div class="wf-text-xs">Connected via Spotify</div></div></div></div>
+    <div class="wf-btn" style="border-color:#c00;color:#c00;font-size:11px;">Disconnect Spotify</div>
+    <label style="margin-top:24px;">Library</label>
+    <div class="wf-box"><div class="wf-row"><span class="wf-text-dark">Last synced: 2 hours ago</span></div><div class="wf-row"><span class="wf-text-dark">2,347 tracks in library</span></div></div>
+    <div class="wf-btn" style="font-size:11px;">Re-sync Library</div>
+    <label style="margin-top:24px;">About</label>
+    <div class="wf-box"><div class="wf-text-dark">Playlist Copilot v1.0</div><div class="wf-text-xs">Built with DeepSeek, Next.js, Spotify API</div></div>
+    <div class="wf-nav" style="position:absolute;bottom:0;left:0;right:0;background:#fff;">
+      <span class="wf-nav-item" onclick="go('p3')">Home</span>
+      <span class="wf-nav-item" onclick="go('p6')">History</span>
+      <span class="wf-nav-item active">Settings</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-selector">
+  <div style="font-size:10px;color:#888;margin-bottom:4px;">Jump to Page:</div>
+  <select onchange="go(this.value)" id="pageSelect">
+    <option value="p0" selected>0. Landing</option>
+    <option value="p1">1. Login</option>
+    <option value="p2">2. Syncing</option>
+    <option value="p3">3. Home</option>
+    <option value="p4">4. Generating</option>
+    <option value="p5">5. Playlist Result</option>
+    <option value="p6">6. History</option>
+    <option value="p7">7. Settings</option>
+  </select>
+  <div style="font-size:9px;color:#aaa;margin-top:4px;">V2 — Click elements to navigate</div>
+</div>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('pageSelect').value = id;
+}
+function setPrompt(text) {
+  const el = document.getElementById('promptInput');
+  if (el) el.textContent = text;
+}
+</script>
+</body>
+</html>
