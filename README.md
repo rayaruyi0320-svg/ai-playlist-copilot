@@ -2,6 +2,10 @@
 
 **A product and interaction-design prototype for finding music in your own Spotify library with a natural-language request.**
 
+![Interactive Playlist Copilot wireframe preview](assets/Playlist-wireframe-preview.png)
+
+**See the work:** [Interactive wireframe](prototype/Wireframe_V2.html) · [Browsable front-end source](app) · [Information architecture](assets/IA_Diagram.md) · [Task flow](assets/Task_Flow.md)
+
 ## Problem and product idea
 
 People often know the situation they are listening in—“15-minute shower, upbeat R&B” or “coffee-shop study, instrumental jazz”—without knowing the exact songs to search for. Keyword search does not capture that combination of mood, activity, and duration. AI Playlist Copilot is designed to interpret the request, retrieve fitting tracks from the listener's saved music, and explain the resulting playlist.
@@ -22,7 +26,7 @@ The proposed pipeline is: sync saved tracks → parse a request into structured 
 
 ## What exists today
 
-The local prototype contains a Next.js App Router and TypeScript interface with Tailwind CSS. It has responsive Landing, Login, Syncing, Home, Generating, Result, History, and Settings screens, plus mock playlists and prompt history. The PRD, flows, copy, and wireframes document the intended end-to-end behavior.
+The published prototype contains a Next.js App Router and TypeScript interface with Tailwind CSS. It has responsive Landing, Login, Syncing, Home, Generating, Result, History, and Settings screens, plus mock playlists and prompt history. The flows, copy, and wireframe document the intended end-to-end behavior.
 
 **Implementation status:** The interface is a static MVP shell. Spotify OAuth, real library sync, AI parsing, retrieval/ranking, playlist creation, and persistent history are **not integrated yet**. Demo content is mock data.
 
@@ -32,9 +36,9 @@ I led 0→1 product definition and interaction design, wrote the PRD and flows, 
 
 ## Repository contents
 
-The public prototype and design materials are now available here. Download [the runnable Next.js source package](AI-Playlist-Copilot-source.zip), then run `pnpm install` and `pnpm dev` locally. It uses mock content; Spotify OAuth, library sync, AI parsing, and playlist creation are not integrated.
+The [Next.js source](app), [components](components), and [mock data](lib/mock-data.ts) are browsable in this repository. Clone or download it, then run `pnpm install` and `pnpm dev` locally. A [source ZIP](AI-Playlist-Copilot-source.zip) is also available. It uses mock content; Spotify OAuth, library sync, AI parsing, and playlist creation are not integrated.
 
-- [Interactive low-fidelity wireframe](Wireframe_V2.html) — download and open in a browser
-- [Information architecture](IA_Diagram.md)
-- [Task flow](Task_Flow.md) and [user flow](User_Flow.md)
-- [UX copy and error states](UX_Copy_V2.md)
+- [Interactive low-fidelity wireframe](prototype/Wireframe_V2.html) — download and open in a browser
+- [Information architecture](assets/IA_Diagram.md)
+- [Task flow](assets/Task_Flow.md) and [user flow](assets/User_Flow.md)
+- [UX copy and error states](assets/UX_Copy_V2.md)

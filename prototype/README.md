@@ -1,3 +1,6 @@
 # Prototype
 
-[Wireframe_V2.html](../Wireframe_V2.html) is a self-contained, low-fidelity interaction prototype. Download and open it in a browser. The [runnable Next.js UI source](../AI-Playlist-Copilot-source.zip) can be installed locally with `pnpm install` and started with `pnpm dev`. Both use mock content and have no live Spotify or AI integration.
+- [Interactive low-fidelity wireframe](Wireframe_V2.html): download and open the HTML file in a browser. Use the page selector or click through the screens.
+- [Implemented interface source](../app): responsive mock-data prototype covering eight screens. Clone the repository and run `pnpm install` followed by `pnpm dev` to use it.
+
+Spotify authorization, library sync, AI parsing, and playlist creation are not integrated.
