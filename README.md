@@ -32,4 +32,9 @@ I led 0→1 product definition and interaction design, wrote the PRD and flows, 
 
 ## Repository contents
 
-This public repository presents portfolio documentation and selected exports. The working Next.js prototype and product documents are currently maintained locally; the repository should not be read as a production app or a live Spotify integration.
+The public prototype and design materials are now available here. Download [the runnable Next.js source package](AI-Playlist-Copilot-source.zip), then run `pnpm install` and `pnpm dev` locally. It uses mock content; Spotify OAuth, library sync, AI parsing, and playlist creation are not integrated.
+
+- [Interactive low-fidelity wireframe](Wireframe_V2.html) — download and open in a browser
+- [Information architecture](IA_Diagram.md)
+- [Task flow](Task_Flow.md) and [user flow](User_Flow.md)
+- [UX copy and error states](UX_Copy_V2.md)
